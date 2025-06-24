@@ -1,22 +1,22 @@
 import os
 import sys
 from logging.config import fileConfig
-
-sys.path.append(
-    os.path.abspath(
-        os.path.join(
-            os.path.dirname(__file__),
-            '..',
-            'src',
-            'api'
-        )
-    )
-)
-from models import Base
-
 from sqlalchemy import engine_from_config
 from sqlalchemy import pool
 from alembic import context
+
+sys_path_target = os.path.abspath(
+    os.path.join(
+        os.path.dirname(__file__),
+        '..',
+        'src',
+        'api'
+    )
+)
+if sys_path_target not in sys.path:
+    sys.path.append(sys_path_target)
+
+from models import Base
 
 # this is the Alembic Config object, which provides access to the values within the .ini file in use.
 config = context.config
@@ -26,12 +26,17 @@ if config.config_file_name is not None:
     fileConfig(config.config_file_name)
 
 # Assume .env or docker-compose sets DATABASE_URL/DB_MIGRATION_URL
-DEFAULT_DB_URL = "postgresql+psycopg2://admin:password@db:5432/eduportal"
+DEFAULT_DB_URL = (
+    "postgresql+psycopg2://admin:password@db:5432/eduportal"
+)
 DB_MIGRATION_URL = os.getenv(
     "DATABASE_URL",
     DEFAULT_DB_URL,
 )
-config.set_main_option("sqlalchemy.url", DB_MIGRATION_URL)
+config.set_main_option(
+    "sqlalchemy.url",
+    DB_MIGRATION_URL,
+)
 
 # Add your models' MetaData object here
 target_metadata = Base.metadata
@@ -63,7 +68,7 @@ def run_migrations_online():
         context.configure(
             connection=connection,
             target_metadata=target_metadata,
-            compare_type=True
+            compare_type=True,
         )
 
         with context.begin_transaction():
