@@ -1,0 +1,4 @@
+{
+    "command": "source venv/bin/activate && pip install -r requirements.txt",
+    "working_directory": "/home/kavia/workspace/code-generation/educonnect-portal-113568-0ff15646/backend_api_workspace/backend_api"
+}
