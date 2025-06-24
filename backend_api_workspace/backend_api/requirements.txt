@@ -41,3 +41,16 @@ uvicorn==0.34.0
 uvloop==0.21.0
 watchfiles==1.0.5
 websockets==15.0.1
+
+# -- ADDED FOR POSTGRESQL/ORM/AUTH/AUTOMATION --
+SQLAlchemy==2.0.30
+asyncpg==0.29.0
+alembic==1.13.1
+psycopg2-binary==2.9.9
+
+python-jose[cryptography]==3.3.0
+passlib[bcrypt]==1.7.4
+python-dotenv==1.1.0
+=======
+# Already includes python-multipart for file uploads.
+
