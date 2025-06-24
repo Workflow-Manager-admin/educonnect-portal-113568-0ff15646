@@ -1,17 +1,49 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
-# Attempt to import endpoints for authentication, timetables, score cards, and announcements.
-try:
-    from . import auth, timetable, scorecard, announcement
-except ImportError:
-    # If module files don't exist yet, these imports will fail (scaffold warning).
-    auth = None
-    timetable = None
-    scorecard = None
-    announcement = None
+from . import auth, timetable, scorecard, announcement
 
-app = FastAPI()
+openapi_tags = [
+    {
+        "name": "auth",
+        "description": (
+            "Endpoints for user authentication (registration/login), "
+            "JWT access token"
+        ),
+    },
+    {
+        "name": "timetable",
+        "description": (
+            "CRUD exam timetable (admin) and timetable lookup/download (student)"
+        ),
+    },
+    {
+        "name": "scorecard",
+        "description": (
+            "CRUD exam score cards (admin) and personal score review (student)"
+        ),
+    },
+    {
+        "name": "announcement",
+        "description": (
+            "Announcements related to exams, paper distribution, PTA meetings, etc."
+        ),
+    },
+]
+
+app = FastAPI(
+    title="EduConnect Portal API",
+    description=(
+        "Backend REST API for EduConnect student portal: authentication, "
+        "timetables (PDF upload/download), score cards, announcements, and admin features."
+    ),
+    version="1.0.0",
+    openapi_tags=openapi_tags,
+    contact={
+        "name": "EduConnect Team",
+        "email": "support@educonnect.com"
+    }
+)
 
 app.add_middleware(
     CORSMiddleware,
@@ -21,17 +53,17 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# Register endpoints for each feature module if present
-if auth and hasattr(auth, "router"):
-    app.include_router(auth.router, prefix="/auth", tags=["auth"])
-if timetable and hasattr(timetable, "router"):
-    app.include_router(timetable.router, prefix="/timetable", tags=["timetable"])
-if scorecard and hasattr(scorecard, "router"):
-    app.include_router(scorecard.router, prefix="/scorecard", tags=["scorecard"])
-if announcement and hasattr(announcement, "router"):
-    app.include_router(announcement.router, prefix="/announcement", tags=["announcement"])
+app.include_router(auth.router, prefix="/auth")
+app.include_router(timetable.router, prefix="/timetable")
+app.include_router(scorecard.router, prefix="/scorecard")
+app.include_router(announcement.router, prefix="/announcement")
 
 
-@app.get("/")
+@app.get(
+    "/",
+    summary="Health check",
+    tags=["health"]
+)
 def health_check():
+    """Simple health check for load balancer/monitoring."""
     return {"message": "Healthy"}

@@ -67,7 +67,8 @@ async def list_announcements(
         stmt = stmt.where(Announcement.title.ilike(f"%{search}%"))
     stmt = stmt.order_by(desc(Announcement.created_at))
     result = await db.execute(stmt)
-    return result.scalars().all()
+    announcements = result.scalars().all()
+    return announcements
 
 
 # PUBLIC_INTERFACE

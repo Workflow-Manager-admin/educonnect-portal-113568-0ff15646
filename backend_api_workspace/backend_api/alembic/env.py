@@ -4,6 +4,7 @@ from logging.config import fileConfig
 from sqlalchemy import engine_from_config
 from sqlalchemy import pool
 from alembic import context
+from models import Base
 
 sys_path_target = os.path.abspath(
     os.path.join(
@@ -15,8 +16,6 @@ sys_path_target = os.path.abspath(
 )
 if sys_path_target not in sys.path:
     sys.path.append(sys_path_target)
-
-from models import Base
 
 # this is the Alembic Config object, which provides access to the values within the .ini file in use.
 config = context.config
