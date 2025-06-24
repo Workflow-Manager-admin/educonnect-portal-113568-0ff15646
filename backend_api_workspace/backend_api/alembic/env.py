@@ -14,6 +14,7 @@ sys_path_target = os.path.abspath(
         'api'
     )
 )
+# If the target is not in sys.path, append it.
 if sys_path_target not in sys.path:
     sys.path.append(sys_path_target)
 

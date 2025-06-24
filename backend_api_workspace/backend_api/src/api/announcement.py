@@ -64,8 +64,12 @@ async def list_announcements(
     if audience:
         stmt = stmt.where(Announcement.audience == audience)
     if search:
-        stmt = stmt.where(Announcement.title.ilike(f"%{search}%"))
-    stmt = stmt.order_by(desc(Announcement.created_at))
+        stmt = stmt.where(
+            Announcement.title.ilike(f"%{search}%")
+        )
+    stmt = stmt.order_by(
+        desc(Announcement.created_at)
+    )
     result = await db.execute(stmt)
     announcements = result.scalars().all()
     return announcements
